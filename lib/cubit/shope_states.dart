@@ -1,10 +1,32 @@
 abstract class ShopStates {}
 class ShopInitialState extends ShopStates{}
-class ShopSuccessState extends ShopStates{}
-class ShopErrorState extends ShopStates{
+class HomeSuccessState extends ShopStates{}
+class HomeErrorState extends ShopStates{
   final String error;
 
-  ShopErrorState(this.error);
+  HomeErrorState(this.error);
 }
-class ShopLoadingState extends ShopStates{}
+class HomeLoadingState extends ShopStates{}
 class ShopChangeBottomBarState extends ShopStates{}
+class CategoriesSuccessState extends ShopStates{}
+class CategoriesErrorState extends ShopStates{
+  final String error;
+
+  CategoriesErrorState(this.error);
+}
+class CategoriesFavoriteSuccessState extends ShopStates{}
+class CategoriesFavoriteErrorState extends ShopStates{
+  final String error;
+
+  CategoriesFavoriteErrorState(this.error);
+}
+
+
+
+
+
+
+
+
+
+

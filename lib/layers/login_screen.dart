@@ -153,6 +153,8 @@ class LoginScreen extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           ShopCubit.get(context).getHomeData();
+                          ShopCubit.get(context).getCategoriesData();
+
                           print(  ShopCubit.get(context).homeModel);
 
                             Navigator.push(

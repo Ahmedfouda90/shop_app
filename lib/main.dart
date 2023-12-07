@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:shop_app/layers/login_screen.dart';
 import 'package:shop_app/layers/onboarding_screen.dart';
 import 'package:shop_app/network/local/cache_helper.dart';
 import 'package:shop_app/network/remote/dio_helper.dart';
+import 'package:shop_app/test.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() async {
@@ -41,12 +43,17 @@ class ShopApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context)=>LoginCubit()),
-        BlocProvider(create: (context)=>ShopCubit()..getHomeData()),
+        BlocProvider(create: (context)=>ShopCubit()..getHomeData()..getCategoriesData()),
+        // BlocProvider(    create: (context) => CategoriesCubit(CategoriesService(Dio()))),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: OnBoardingScreen(),
+
+        // Scaffold(body:Center(child: YourWidgetContent/*OnBoardingScreen*/()) ,),
         theme: ThemeData(
+
           primarySwatch: Colors.deepOrange,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(

@@ -6,6 +6,9 @@ class DioHelper {
 
   static init() {
     dio = Dio(BaseOptions(
+      validateStatus: (status) {
+        return status! < 500; // Consider status codes less than 500 as successful
+      },
         baseUrl: 'https://student.valuxapps.com/api/',
         receiveDataWhenStatusError: true,
         ));

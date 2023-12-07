@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/shop_cubit.dart';
 import 'package:shop_app/cubit/shope_states.dart';
 import 'package:shop_app/custom_widgets/custom_widgets.dart';
+import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/home_model.dart';
 
 // import 'carousel';
@@ -16,11 +17,15 @@ class ProductsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          body: state is! ShopLoadingState ||
-                  ShopCubit.get(context).homeModel != null
-              ? productsBuilder(ShopCubit.get(context).homeModel!)
+          body: ShopCubit.get(context).homeModel != null &&
+                      ShopCubit.get(context).categoriesModel != null
+              ? productsBuilder(
+                  ShopCubit.get(context)
+                      .homeModel!, ShopCubit.get(context).categoriesModel!,context
+                )
               : const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                        backgroundColor: Colors.red, color: Colors.green),
                 ),
         );
       },
@@ -28,18 +33,25 @@ class ProductsScreen extends StatelessWidget {
   }
 }
 
-Widget productsBuilder(HomeModel? model) {
+Widget productsBuilder(
+  HomeModel? model,
+   CategoriesModel? categoriesModel,context
+) {
   if (model == null || model.data == null || model.data!.banners.isEmpty) {
+    print('error productsBuilder');
     // Handle the case when the data is null or empty
     return Center(
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(
+        color: Colors.black,
+      ),
     ); // Or any other appropriate widget
   }
   return SingleChildScrollView(
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CarouselSlider(
-          items: model!.data!.banners
+          items: model.data!.banners
               .map((e) => Image(
                     image: NetworkImage('${e.image}'),
                     width: double.infinity,
@@ -59,9 +71,46 @@ Widget productsBuilder(HomeModel? model) {
               scrollDirection: Axis.horizontal),
         ),
         SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                text: 'Categories',
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+              Container(
+                height: 100,
+                child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) =>
+                        categoryItems(categoriesModel.data!.data![index]),
+                    separatorBuilder: (context, index) => SizedBox(
+                          width: 10,
+                        ),
+                    itemCount: categoriesModel!.data!.data!.length),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              customText(
+                text: 'New Products',
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
           height: 20,
         ),
-        if (model.data!.products != null)
+        if (model.data!.products != null && model.data!.products.isNotEmpty)
           ClipRRect(
             clipBehavior: Clip.none,
             child: GridView.count(
@@ -73,76 +122,10 @@ Widget productsBuilder(HomeModel? model) {
               crossAxisSpacing: 20,
               childAspectRatio: 1 / 1.7,
               children: List.generate(model.data!.products.length,
-                  (index) => gridProduct(model.data!.products[index])),
+                  (index) => gridProduct(model.data!.products[index],context)),
             ),
           )
       ],
     ),
-  );
-}
-
-Widget gridProduct(ProductModel model) {
-  if (model.image == null) {
-    // Handle the case when the image is null
-    return Center(
-      child: CircularProgressIndicator(),
-    ); // Or any other appropriate widget
-  }
-  return Column(
-    children: [
-      Stack(
-        alignment: AlignmentDirectional.bottomStart,
-        children: [
-          Image(
-            image: NetworkImage(model.image!),
-            width: double.infinity,
-            fit: BoxFit.cover,
-            height: 200,
-          ),
-          if (model.discount != 0)
-            Container(
-              // height: 15,
-              // width: 50,
-              color: Colors.red,
-              child: const Text(
-                'DISCOUNT',
-                style: TextStyle(color: Colors.white, fontSize: 8),
-              ),
-            )
-        ],
-      ),
-      customText(
-        maxLines: 2,
-        text: model.name,
-        fontWeight: FontWeight.w700,
-        fontSize: 14,
-      ),
-      Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            customText(
-              textColor: Colors.red,
-              maxLines: 3,
-              text: '${model.price.round()}',
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-            ),
-            SizedBox(width: 10,),
-            if (model.discount != 0)
-              customText(
-                textColor: Colors.grey,
-                maxLines: 3,
-                text: '${model.oldPrice.round()}',
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-              ),
-            Spacer(),
-            IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border,size: 20,))
-          ],
-        ),
-      ),
-    ],
   );
 }

@@ -1,2 +1,4 @@
-const LOGIN='login';
-const HOME='home';
+const kLogin='login';
+const kHome='home';
+const kGetCategories='categories';
+const kFavorites='favorites';
