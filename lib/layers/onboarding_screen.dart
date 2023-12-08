@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/custom_widgets/custom_widgets.dart';
-import 'package:shop_app/layers/login_screen.dart';
+import 'package:shop_app/layers/singn_in_and_sign_up/login_screen.dart';
 import 'package:shop_app/network/local/cache_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

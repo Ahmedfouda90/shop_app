@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/consts/consts.dart';
 import 'package:shop_app/cubit/login_cubit.dart';
 import 'package:shop_app/cubit/login_states.dart';
 import 'package:shop_app/cubit/shop_cubit.dart';
 import 'package:shop_app/custom_widgets/text_field.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/layers/home_screen.dart';
+import 'package:shop_app/layers/singn_in_and_sign_up/register_screen.dart';
 import 'package:shop_app/network/local/cache_helper.dart';
-import '../custom_widgets/custom_widgets.dart';
+import '../../custom_widgets/custom_widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -37,6 +39,7 @@ class LoginScreen extends StatelessWidget {
               CacheHelper.saveData(
                   key: 'token', value: state.loginModel.data!.token)
                   .then((value) {
+                token = state.loginModel.data!.token!;
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -155,13 +158,14 @@ class LoginScreen extends StatelessWidget {
                           ShopCubit.get(context).getHomeData();
                           ShopCubit.get(context).getCategoriesData();
 
-                          print(  ShopCubit.get(context).homeModel);
+                          print(ShopCubit
+                              .get(context)
+                              .homeModel);
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
-
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
                         },
                         child: Container(
                           width: double.infinity,
@@ -175,6 +179,28 @@ class LoginScreen extends StatelessWidget {
                                 textColor: Colors.white),
                           ),
                         ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          customText(
+                              fontSize: 14, fontWeight: FontWeight.w600,
+                              textColor: Colors.black,
+                              text: 'Don\'t have an account    '
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => RegisterScreen()));
+                            },
+                            child: customText(
+                                fontSize: 14, fontWeight: FontWeight.w600,
+                                textColor: Colors.blue,
+                                text: 'Register   '
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),

@@ -11,6 +11,7 @@ import 'package:shop_app/layers/shop_layers/settings.dart';
 import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/change_favorite_model.dart';
 import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/models/login_model.dart';
 import 'package:shop_app/network/end_points.dart';
 import 'package:shop_app/network/remote/dio_helper.dart';
 
@@ -19,7 +20,7 @@ class ShopCubit extends Cubit<ShopStates> {
 
   static ShopCubit get(context) => BlocProvider.of(context);
   int currentIndex = 0;
-  List<Widget> bottomScreens = const [
+  List<Widget> bottomScreens = [
     ProductsScreen(),
     CategoriesScreen(),
     FavouritesScreen(),
@@ -37,7 +38,6 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopChangeBottomBarState());
   }
 
-  Map<int, bool> favourite = {};
   HomeModel? homeModel;
 
   void getHomeData() {
@@ -103,17 +103,75 @@ class ShopCubit extends Cubit<ShopStates> {
     });*/
   }
 
+  Map<int, bool> favourite = {};
+
   ChangeFavoriteModel? changeFavoriteModel;
 
   void changeFavorite(int productId) {
     DioHelper.postData(url: kFavorites, data: {'product_id': productId})
         .then((value) {
-          changeFavoriteModel=ChangeFavoriteModel.fromJson(value.data);
-          print(value.data);
+      changeFavoriteModel = ChangeFavoriteModel.fromJson(value.data);
+      print(value.data);
       emit(CategoriesFavoriteSuccessState());
     }).catchError((error) {
       emit(CategoriesFavoriteErrorState(error.toString()));
       print(error.toString());
+    });
+  }
+
+  // LoginModel? userModel;
+
+  void getUserData() {
+    emit(UserDataLoadingState());
+    DioHelper.getData(url: kLogin, token: token).then((value) {
+      print(value);
+      if (userModel == null) {
+        userModel = LoginModel.fromJson(value.data);
+
+        print(value.data.toString());
+        // print(homeModel!.data!.bann
+        // ers[0].image);
+        // print(homeModel!.status);
+        emit(UserDataSuccessState(userModel));
+      } else {
+        emit(UserDataSuccessState(userModel));
+      }
+    }).catchError((error) {
+      print(error.toString());
+      emit(UserDataErrorState(error.toString()));
+    });
+  }
+
+  LoginModel? userModel;
+
+  void updateUserData({
+    @required String? name,
+    @required String? email,
+    @required String? phone,
+  }) {
+    emit(UpdateUserLoadingState());
+    DioHelper.putData(url: kUpdateProfile, token: token, data: {
+      'name': name,
+      'email': email,
+      'phone': phone,
+    }, query: {}).then((value) {
+      print(value);
+      if (value.data != null) {
+        if (value.data is Map<String, dynamic>) {
+          userModel = LoginModel.fromJson(value.data);
+          print(value.data.toString());
+          emit(UpdateUserSuccessState(userModel!));
+        }else {
+          print('Unexpected response data type: ${value.data.runtimeType}');
+          emit(UpdateUserErrorState('Unexpected response data type'));
+        }
+      } else {
+        // Handle the case where response data is null
+        emit(UpdateUserErrorState('Response data is null'));
+      }
+    }).catchError((error) {
+      print(error.toString());
+      emit(UpdateUserErrorState(error.toString()));
     });
   }
 }

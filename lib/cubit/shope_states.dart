@@ -1,3 +1,5 @@
+import '../models/login_model.dart';
+
 abstract class ShopStates {}
 class ShopInitialState extends ShopStates{}
 class HomeSuccessState extends ShopStates{}
@@ -22,8 +24,29 @@ class CategoriesFavoriteErrorState extends ShopStates{
 }
 
 
+class UserDataLoadingState extends ShopStates{}
+class UserDataSuccessState extends ShopStates{
+  final LoginModel? loginModel;
 
+  UserDataSuccessState(this.loginModel);
+}
+class UserDataErrorState extends ShopStates{
+  final String error;
 
+  UserDataErrorState(this.error);
+}
+
+class UpdateUserLoadingState extends ShopStates{}
+class UpdateUserSuccessState extends ShopStates{
+  final LoginModel? loginModel;
+
+  UpdateUserSuccessState(this.loginModel);
+}
+class UpdateUserErrorState extends ShopStates{
+  final String error;
+
+  UpdateUserErrorState(this.error);
+}
 
 
 

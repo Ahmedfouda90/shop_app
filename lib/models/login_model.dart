@@ -18,6 +18,7 @@ class UserData {
   String? password;
   String? phone;
   String? image;
+  String? email;
   String? token;
   int? points;
   int? credit;
@@ -43,5 +44,6 @@ class UserData {
     name = json['name'];
     token = json['token'];
     credit = json['credit'];
+    email = json['email'];
   }
 }

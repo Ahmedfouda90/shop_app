@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/shop_cubit.dart';
 import 'package:shop_app/cubit/shope_states.dart';
 import 'package:shop_app/custom_widgets/custom_widgets.dart';
-import 'package:shop_app/layers/login_screen.dart';
+import 'package:shop_app/layers/singn_in_and_sign_up/login_screen.dart';
 import 'package:shop_app/layers/shop_layers/search.dart';
 import 'package:shop_app/network/local/cache_helper.dart';
 

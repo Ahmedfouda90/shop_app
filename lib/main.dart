@@ -7,7 +7,7 @@ import 'package:shop_app/cubit/bloc_observer.dart';
 import 'package:shop_app/cubit/login_cubit.dart';
 import 'package:shop_app/cubit/shop_cubit.dart';
 import 'package:shop_app/layers/home_screen.dart';
-import 'package:shop_app/layers/login_screen.dart';
+import 'package:shop_app/layers/singn_in_and_sign_up/login_screen.dart';
 import 'package:shop_app/layers/onboarding_screen.dart';
 import 'package:shop_app/network/local/cache_helper.dart';
 import 'package:shop_app/network/remote/dio_helper.dart';
@@ -43,7 +43,7 @@ class ShopApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context)=>LoginCubit()),
-        BlocProvider(create: (context)=>ShopCubit()..getHomeData()..getCategoriesData()),
+        BlocProvider(create: (context)=>ShopCubit()..getHomeData()..getCategoriesData()..getUserData()),
         // BlocProvider(    create: (context) => CategoriesCubit(CategoriesService(Dio()))),
 
       ],
